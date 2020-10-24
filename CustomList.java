@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.ListIterator;
 
 public class CustomList<E> implements List<E> {
-	Object[] elementData = new Object[10];
-
+	Object[] elementData = new Object[100];
+	
 	/**
 	 * Returns the number of elements in this list.
 	 *
@@ -16,9 +16,9 @@ public class CustomList<E> implements List<E> {
 	 */
 	@Override
 	public int size() {
-		int i = 0;
 		int size = 0;
-		while (this.elementData[i] != null) {
+
+		while (this.elementData[size] != null) {
 			size++;
 		}
 		return size;
@@ -32,9 +32,10 @@ public class CustomList<E> implements List<E> {
 	@Override
 	public boolean isEmpty() {
 		if (size() == 0) {
-		return false;}
+		return true;
+		}
 		else {
-			return true;
+			return false;
 		}
 	}
 
@@ -67,10 +68,10 @@ public class CustomList<E> implements List<E> {
 	
 	@Override
 	public boolean add(E e) {
-		if (elementData[this.size()] != null) {
-			reSize(this.size() + 1);
+		if (this.size() >= elementData.length) {
+			reSize(this.size()*2);
 		}
-		elementData[this.size() - 1] = e;
+		elementData[this.size()] = e;
 		return true;
 	}
 	
@@ -129,12 +130,10 @@ public class CustomList<E> implements List<E> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public E get(int index) {
-		E e;
-		if (index < this.size()) {
+		if (index > this.size()) {
 			throw new IndexOutOfBoundsException("Array does not contain enough elements");
 		}
-		e = (E) elementData[index];
-		return e;
+		return (E) elementData[index];
 	}
 
 	/**
@@ -152,7 +151,7 @@ public class CustomList<E> implements List<E> {
 			throw new IndexOutOfBoundsException("Array is not large enough");
 		}
 		e = this.get(index);
-		element = (E) elementData[index];
+		elementData[index] = element;
 		return e;
 	}
 
@@ -167,14 +166,16 @@ public class CustomList<E> implements List<E> {
 	 */
 	@Override
 	public void add(int index, E element) {
-		if (this.size() <= index) {
+		if (this.size() < index) {
 			throw new IndexOutOfBoundsException("Array is not large enough");
+		} else if(this.size() == index) {
+			add(element);
+			return;
 		}
-		reSize(this.size() + 1);
-		for (int i = size(); i > index; i--) {
+		for (int i = size()-1; i >= index; i--) {
 			elementData[i + 1] = elementData[i];
 		}
-		element = (E) elementData[index];
+		elementData[index] = (E) element;
 	}
 
 	/**
@@ -191,7 +192,7 @@ public class CustomList<E> implements List<E> {
 			throw new IndexOutOfBoundsException("Array is not large enough");
 		}
 		E e = (E) elementData[index];
-		for (int i = this.size(); i > index; i--) {
+		for (int i = index; i <= this.size(); i++) {
 			elementData[i] = elementData[i + 1];
 		}
 		
